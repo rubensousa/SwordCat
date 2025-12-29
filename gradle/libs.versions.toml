@@ -56,11 +56,15 @@ androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runt
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
-
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationCore" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 
 # Testing
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidx-test-core" }
@@ -74,8 +78,6 @@ androidx-test-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-tes
 carioca-hilt-compose = { module = "com.rubensousa.carioca:hilt-compose", version.ref = "carioca" }
 carioca-hilt-manifest = { module = "com.rubensousa.carioca:hilt-manifest", version.ref = "carioca" }
 carioca-hilt-runner = { module = "com.rubensousa.carioca:hilt-runner", version.ref = "carioca" }
-carioca-report-android = { module = "com.rubensousa.carioca:report-android", version.ref = "carioca-report" }
-carioca-report-compose = { module = "com.rubensousa.carioca:report-android-compose", version.ref = "carioca-report" }
 carioca-rules = { module = "com.rubensousa.carioca:junit4-rules", version.ref = "carioca" }
 compose-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose-ui" }
 compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose-ui" }
@@ -83,6 +85,7 @@ dagger-hilt-testing = { module = "com.google.dagger:hilt-android-testing", versi
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+mockwebserver3 = { module = "com.squareup.okhttp3:mockwebserver3", version.ref = "mockwebserver3" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
