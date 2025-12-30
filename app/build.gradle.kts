@@ -46,8 +46,15 @@ android {
     buildFeatures {
         compose = true
     }
+    testFixtures {
+        enable = true
+    }
     testOptions {
         unitTests.isReturnDefaultValues = true
+    }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("room.generateKotlin", "true")
     }
 }
 
@@ -72,23 +79,28 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit)
     implementation(libs.retrofit.converter.serialization)
+    implementation(libs.androidx.room)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.bundles.test.unit)
     testImplementation(libs.okhttp)
     testImplementation(libs.mockwebserver3)
+
+    testFixturesImplementation(platform(libs.androidx.compose.bom))
+    testFixturesImplementation(libs.androidx.compose.ui)
+
+    androidTestImplementation(libs.bundles.test.unit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.carioca.hilt.manifest)
     androidTestImplementation(libs.dagger.hilt.testing)
     androidTestImplementation(libs.carioca.hilt.compose)
     androidTestImplementation(libs.carioca.hilt.runner)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.room.testing)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
