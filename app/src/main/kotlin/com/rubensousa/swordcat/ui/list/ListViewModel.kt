@@ -11,11 +11,17 @@ import com.rubensousa.swordcat.ui.StringResource
 import com.rubensousa.swordcat.ui.image.ImageReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,11 +31,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val repository: CatRepository,
+    private val listConfig: ListConfig,
     private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val uiState = MutableStateFlow<ListScreenState>(ListScreenState.Loading)
     private val eventSink = EventSink<ListScreenEvent>()
+    private val searchTextFlow = MutableSharedFlow<String>()
+    private var allCatItems: ImmutableList<CatListItem> = persistentListOf()
 
     init {
         loadCats()
@@ -48,12 +57,9 @@ class ListViewModel @Inject constructor(
                     offset = 0
                 )
             ).onSuccess { cats ->
-                uiState.update {
-                    ListScreenState.Content(
-                        items = mapCatItems(cats),
-                        onSearchTextChanged = { text -> onSearchTextChanged(text) }
-                    )
-                }
+                allCatItems = mapCatItems(cats)
+                setContentState(allCatItems)
+                observeSearchQuery()
             }.onFailure { error ->
                 Timber.e(error)
                 uiState.update {
@@ -68,8 +74,35 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    private fun onSearchTextChanged(text: String) {
+    private fun setContentState(items: ImmutableList<CatListItem>) {
+        uiState.update {
+            ListScreenState.Content(
+                items = items,
+                onSearchTextChanged = { text -> onSearchTextChanged(text) }
+            )
+        }
+    }
 
+    private fun onSearchTextChanged(text: String) {
+        viewModelScope.launch {
+            searchTextFlow.emit(text)
+        }
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun observeSearchQuery() {
+        viewModelScope.launch {
+            searchTextFlow
+                .debounce(listConfig.searchDebounceMs)
+                .collectLatest { text ->
+                    if (text.trim().isEmpty()) {
+                        setContentState(allCatItems)
+                    } else {
+                        val newItems = search(text)
+                        setContentState(newItems)
+                    }
+                }
+        }
     }
 
     private suspend fun mapCatItems(cats: List<Cat>): ImmutableList<CatListItem> {
@@ -93,6 +126,13 @@ class ListViewModel @Inject constructor(
                 }
             )
         }.toImmutableList()
+    }
+
+    private fun search(text: String): ImmutableList<CatListItem> {
+        // Local search since we have all the cats already
+        return allCatItems.filter { item ->
+            item.breedName.lowercase().contains(text.lowercase())
+        }.toPersistentList()
     }
 
 }
