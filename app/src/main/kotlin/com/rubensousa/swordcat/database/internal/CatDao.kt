@@ -14,6 +14,9 @@ internal interface CatDao {
     @Query("SELECT * FROM cat ORDER BY breed_name ASC LIMIT :limit OFFSET :offset")
     suspend fun getCats(offset: Int, limit: Int): List<CatEntity>
 
+    @Query("SELECT * FROM cat WHERE id = :id")
+    suspend fun getCat(id: String): CatEntity?
+
     @Query("SELECT * FROM favorite_cat WHERE catId = :catId")
     fun observeFavorite(catId: String): Flow<List<CatFavoriteEntity>>
 

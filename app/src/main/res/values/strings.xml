@@ -9,4 +9,8 @@
     <string name="retry">Retry</string>
     <string name="favorite_on">Remove from favorites</string>
     <string name="favorite_off">Add to favorites</string>
+    <string name="label_description">Description</string>
+    <string name="label_origin">Origin</string>
+    <string name="label_temperament">Temperament</string>
+    <string name="label_lifespan">Lifespan</string>
 </resources>

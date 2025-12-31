@@ -34,6 +34,14 @@ class CatDatabaseSource @Inject constructor(
         }
     }
 
+    override suspend fun getCat(id: String): Cat? {
+        return withContext(dispatcher) {
+            runCatching {
+                catDao.getCat(id)?.let { mapCatFromEntity(it) }
+            }.getOrNull()
+        }
+    }
+
     override fun observeIsFavorite(catId: String): Flow<Boolean> {
         return catDao.observeFavorite(catId)
             .map { list -> list.isNotEmpty() }

@@ -49,6 +49,28 @@ class CatRepositoryTest {
     }
 
     @Test
+    fun `getCat returns cat from local source`() = runTest {
+        // given
+        val cat = CatFixtures.create(id = "1")
+        localSource.saveCats(listOf(cat))
+
+        // when
+        val result = repository.getCat(cat.id).getOrThrow()
+
+        // then
+        assertThat(result).isEqualTo(cat)
+    }
+
+    @Test
+    fun `getCat returns error if cat is not found`() = runTest {
+        // when
+        val result = repository.getCat("1")
+
+        // then
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
     fun `toggleFavorite updates favorite state`() = runTest {
         // given
         val catId = "1"

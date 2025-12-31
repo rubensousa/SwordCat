@@ -39,6 +39,16 @@ internal class CatRepositoryImpl @Inject constructor(
             )
     }
 
+    override suspend fun getCat(id: String): Result<Cat> {
+        val cat = localSource.getCat(id)
+        return if (cat != null) {
+            Result.success(cat)
+        } else {
+            // Simplification, ideally we would fetch remote again and update
+            Result.failure(NoSuchElementException("Cat not found with id: $id"))
+        }
+    }
+
     override fun observeFavoriteState(catId: String): Flow<Boolean> {
         return localSource.observeIsFavorite(catId)
     }
@@ -52,4 +62,3 @@ internal class CatRepositoryImpl @Inject constructor(
     }
 
 }
-
