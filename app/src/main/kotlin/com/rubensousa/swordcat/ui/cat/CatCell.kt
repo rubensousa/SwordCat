@@ -1,4 +1,4 @@
-package com.rubensousa.swordcat.ui.list
+package com.rubensousa.swordcat.ui.cat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

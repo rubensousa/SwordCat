@@ -36,7 +36,9 @@ import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.ui.ConsumeEvents
 import com.rubensousa.swordcat.ui.EventSource
 import com.rubensousa.swordcat.ui.EventSourceFlow
+import com.rubensousa.swordcat.ui.cat.CatCell
 import com.rubensousa.swordcat.ui.cat.CatGridConfig
+import com.rubensousa.swordcat.ui.cat.CatListItem
 import com.rubensousa.swordcat.ui.detail.DetailNavKey
 import com.rubensousa.swordcat.ui.image.ImageReference
 import com.rubensousa.swordcat.ui.navigation.LocalNavigator
@@ -65,9 +67,6 @@ fun ListScreen(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding(),
-        topBar = {
-
-        }
     ) { innerPadding ->
         Column(
             modifier = Modifier

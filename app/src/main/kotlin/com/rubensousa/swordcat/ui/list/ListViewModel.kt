@@ -9,6 +9,7 @@ import com.rubensousa.swordcat.domain.CatRepository
 import com.rubensousa.swordcat.domain.CatRequest
 import com.rubensousa.swordcat.ui.EventSink
 import com.rubensousa.swordcat.ui.StringResource
+import com.rubensousa.swordcat.ui.cat.CatListItem
 import com.rubensousa.swordcat.ui.image.ImageReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList

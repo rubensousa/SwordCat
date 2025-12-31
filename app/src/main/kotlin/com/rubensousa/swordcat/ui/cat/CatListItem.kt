@@ -1,4 +1,4 @@
-package com.rubensousa.swordcat.ui.list
+package com.rubensousa.swordcat.ui.cat
 
 import com.rubensousa.swordcat.ui.image.ImageReference
 import kotlinx.coroutines.flow.StateFlow

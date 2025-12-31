@@ -1,6 +1,7 @@
 package com.rubensousa.swordcat.ui.list
 
 import com.rubensousa.swordcat.ui.StringResource
+import com.rubensousa.swordcat.ui.cat.CatListItem
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface ListScreenState {
