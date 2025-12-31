@@ -11,5 +11,5 @@ internal data class CatRemoteModel(
     @SerialName("origin") val origin: String,
     @SerialName("description") val description: String,
     @SerialName("life_span") val lifeSpan: String,
-    @SerialName("reference_image_id") val imageId: String,
+    @SerialName("reference_image_id") val imageId: String?,
 )

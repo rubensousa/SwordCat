@@ -13,7 +13,7 @@ internal data class CatEntity(
     @ColumnInfo("origin") val origin: String,
     @ColumnInfo("temperament") val temperament: String,
     @ColumnInfo("description") val description: String,
-    @ColumnInfo("imageId") val imageId: String,
+    @ColumnInfo("imageId") val imageId: String?,
     @ColumnInfo("lifespan_start") val lifespanStart: Int,
     @ColumnInfo("lifespan_end") val lifespanEnd: Int,
 )

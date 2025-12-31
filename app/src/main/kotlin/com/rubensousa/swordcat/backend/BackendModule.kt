@@ -4,6 +4,7 @@ import com.rubensousa.swordcat.backend.internal.AuthenticationInterceptor
 import com.rubensousa.swordcat.backend.internal.CatService
 import com.rubensousa.swordcat.backend.internal.RetrofitBuilder
 import com.rubensousa.swordcat.domain.CatRemoteSource
+import com.rubensousa.swordcat.domain.ImageRemoteService
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -46,6 +47,10 @@ class BackendModule {
 
         @Binds
         abstract fun bindCatRemoteSource(impl: CatHttpSource): CatRemoteSource
+
+        @Binds
+        abstract fun bindImageService(impl: HttpImageService): ImageRemoteService
+
     }
 
 }

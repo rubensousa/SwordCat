@@ -4,30 +4,37 @@ import com.rubensousa.swordcat.database.internal.CatEntity
 import com.rubensousa.swordcat.domain.Cat
 import com.rubensousa.swordcat.domain.CatLocalSource
 import com.rubensousa.swordcat.domain.CatRequest
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CatDatabaseSource @Inject constructor(
-    database: CatDatabase
+    database: CatDatabase,
+    private val dispatcher: CoroutineDispatcher
 ) : CatLocalSource {
 
     private val catDao = database.catDao()
 
     override suspend fun loadCats(request: CatRequest): List<Cat> {
-        return runCatching {
-            catDao.getCats(
-                limit = request.limit,
-                offset = request.offset
-            ).map { entity ->
-                mapCatFromEntity(entity)
-            }
-        }.getOrNull().orEmpty()
+        return withContext(dispatcher) {
+            runCatching {
+                catDao.getCats(
+                    limit = request.limit,
+                    offset = request.offset
+                ).map { entity ->
+                    mapCatFromEntity(entity)
+                }
+            }.getOrNull().orEmpty()
+        }
     }
 
     override suspend fun saveCats(cats: List<Cat>) {
-        runCatching {
-            catDao.upsertCats(cats.map { cat -> mapCatToEntity(cat) })
+        withContext(dispatcher) {
+            runCatching {
+                catDao.upsertCats(cats.map { cat -> mapCatToEntity(cat) })
+            }
         }
     }
 

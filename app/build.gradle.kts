@@ -45,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     testFixtures {
         enable = true
@@ -71,9 +72,12 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.hilt.compose)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
     ksp(libs.dagger.hilt.compiler)
     ksp(libs.androidx.hilt.compiler)
 
