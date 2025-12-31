@@ -1,7 +1,9 @@
 package com.rubensousa.swordcat
 
 import com.rubensousa.swordcat.backend.BackendModule
+import com.rubensousa.swordcat.domain.CatRemoteSource
 import com.rubensousa.swordcat.domain.ImageRemoteService
+import com.rubensousa.swordcat.fixtures.FakeCatRemoteSource
 import com.rubensousa.swordcat.fixtures.FakeImageRemoteService
 import dagger.Binds
 import dagger.Module
@@ -20,6 +22,12 @@ class TestBackendModule {
 
     @Provides
     @Singleton
+    fun provideFakeCatRemoteSource(): FakeCatRemoteSource {
+        return FakeCatRemoteSource()
+    }
+
+    @Provides
+    @Singleton
     fun provideFakeImageService(): FakeImageRemoteService {
         return FakeImageRemoteService()
     }
@@ -27,6 +35,9 @@ class TestBackendModule {
     @InstallIn(SingletonComponent::class)
     @Module
     abstract class Bindings {
+
+        @Binds
+        abstract fun bindCatRemoteSource(impl: FakeCatRemoteSource): CatRemoteSource
 
         @Binds
         abstract fun bindImageService(impl: FakeImageRemoteService): ImageRemoteService

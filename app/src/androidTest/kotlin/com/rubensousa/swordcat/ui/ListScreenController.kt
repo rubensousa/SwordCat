@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -12,7 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.domain.Cat
-import com.rubensousa.swordcat.fixtures.FakeCatRepository
+import com.rubensousa.swordcat.fixtures.FakeCatRemoteSource
 import com.rubensousa.swordcat.ui.list.ListConfig
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -20,16 +21,16 @@ import dagger.assisted.AssistedInject
 
 class ListScreenController @AssistedInject constructor(
     @Assisted private val composeTestRule: ComposeTestRule,
-    private val catRepository: FakeCatRepository,
+    private val catRemoteSource: FakeCatRemoteSource,
     private val config: ListConfig
 ) {
 
     fun simulateCats(cats: List<Cat>) {
-        catRepository.setLoadCatsSuccessResult(cats)
+        catRemoteSource.setLoadCatSuccessResult(cats)
     }
 
     fun simulateCatFetchError() {
-        catRepository.setLoadCatsErrorResult(IllegalStateException("Whoops"))
+        catRemoteSource.setLoadCatErrorResult(IllegalStateException("Whoops"))
     }
 
     fun waitUntilLoadingIsGone() {
@@ -61,6 +62,15 @@ class ListScreenController @AssistedInject constructor(
             hasAnyAncestor(hasContentDescription(name)) and
                     hasContentDescription(getString(R.string.favorite_on))
         ).assertIsDisplayed()
+    }
+
+    fun waitUntilCatIsFavorite(name: String) {
+        composeTestRule.waitUntil {
+            composeTestRule.onNode(
+                hasAnyAncestor(hasContentDescription(name)) and
+                        hasContentDescription(getString(R.string.favorite_on))
+            ).isDisplayed()
+        }
     }
 
     fun assertCatIsNotFavorite(name: String) {

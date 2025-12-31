@@ -3,9 +3,9 @@ package com.rubensousa.swordcat.database
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
+import com.rubensousa.swordcat.database.internal.CatEntityMapper
 import com.rubensousa.swordcat.domain.CatRequest
 import com.rubensousa.swordcat.fixtures.CatFixtures
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -20,6 +20,7 @@ class CatDatabaseSourceTest {
 
     private val databaseSource = CatDatabaseSource(
         database = database,
+        entityMapper = CatEntityMapper(),
         dispatcher = UnconfinedTestDispatcher()
     )
 
@@ -70,61 +71,4 @@ class CatDatabaseSourceTest {
         ).isEqualTo(cats.sortedBy { it.breedName })
     }
 
-    @Test
-    fun testFavoriteIsAdded() = runTest {
-        // given
-        val catId = "some_id"
-        databaseSource.saveCats(listOf(CatFixtures.create(id = catId)))
-
-        // when
-        databaseSource.setFavoriteCat(catId, true)
-
-        // then
-        assertThat(databaseSource.observeIsFavorite(catId).first()).isTrue()
-    }
-
-    @Test
-    fun testFavoriteIsRemoved() = runTest {
-        // given
-        val catId = "some_id"
-        databaseSource.saveCats(listOf(CatFixtures.create(id = catId)))
-        databaseSource.setFavoriteCat(catId, true)
-
-        // when
-        databaseSource.setFavoriteCat(catId, false)
-
-        // then
-        assertThat(databaseSource.observeIsFavorite(catId).first()).isFalse()
-    }
-
-    @Test
-    fun testObserveFavoriteCatsOnlyReturnsFavorites() = runTest {
-        // given
-        val cat1 = CatFixtures.create(id = "1", breedName = "A")
-        val cat2 = CatFixtures.create(id = "2", breedName = "B")
-        databaseSource.saveCats(listOf(cat1, cat2))
-        databaseSource.setFavoriteCat(cat1.id, true)
-
-        // when
-        val favorites = databaseSource.observeFavoriteCats().first()
-
-        // then
-        assertThat(favorites).isEqualTo(listOf(cat1))
-    }
-
-    @Test
-    fun testObserveFavoriteCatsAreSortedByName() = runTest {
-        // given
-        val cat1 = CatFixtures.create(id = "1", breedName = "Z")
-        val cat2 = CatFixtures.create(id = "2", breedName = "A")
-        databaseSource.saveCats(listOf(cat1, cat2))
-        databaseSource.setFavoriteCat(cat1.id, true)
-        databaseSource.setFavoriteCat(cat2.id, true)
-
-        // when
-        val favorites = databaseSource.observeFavoriteCats().first()
-
-        // then
-        assertThat(favorites).isEqualTo(listOf(cat2, cat1))
-    }
 }

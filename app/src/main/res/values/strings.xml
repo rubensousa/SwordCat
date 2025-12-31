@@ -8,6 +8,7 @@
     <string name="loading">Loading</string>
     <string name="retry">Retry</string>
     <string name="favorite_on">Remove from favorites</string>
+    <string name="favorite_lifespan">Average lifespan: %1$s</string>
     <string name="favorite_off">Add to favorites</string>
     <string name="label_breed">Breed</string>
     <string name="label_description">Description</string>

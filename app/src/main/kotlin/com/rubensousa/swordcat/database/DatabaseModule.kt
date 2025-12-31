@@ -1,6 +1,7 @@
 package com.rubensousa.swordcat.database
 
 import android.content.Context
+import com.rubensousa.swordcat.domain.CatFavoriteLocalSource
 import com.rubensousa.swordcat.domain.CatLocalSource
 import com.rubensousa.swordcat.domain.ImageCache
 import dagger.Binds
@@ -29,6 +30,11 @@ class DatabaseModule {
 
         @Binds
         abstract fun bindCatLocalSource(impl: CatDatabaseSource): CatLocalSource
+
+        @Binds
+        abstract fun bindCatFavoriteLocalSource(
+            impl: CatFavoriteDatabaseSource
+        ): CatFavoriteLocalSource
 
         @Binds
         abstract fun bindImageCache(impl: ImageDatabaseCache): ImageCache

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells.Adaptive
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
@@ -37,6 +36,7 @@ import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.ui.ConsumeEvents
 import com.rubensousa.swordcat.ui.EventSource
 import com.rubensousa.swordcat.ui.EventSourceFlow
+import com.rubensousa.swordcat.ui.cat.CatGridConfig
 import com.rubensousa.swordcat.ui.detail.DetailNavKey
 import com.rubensousa.swordcat.ui.image.ImageReference
 import com.rubensousa.swordcat.ui.navigation.LocalNavigator
@@ -103,7 +103,7 @@ fun ListScreen(
                     LazyVerticalGrid(
                         modifier = Modifier
                             .weight(1f),
-                        columns = Adaptive(minSize = 150.dp),
+                        columns = CatGridConfig.getCells(),
                         contentPadding = PaddingValues(bottom = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),

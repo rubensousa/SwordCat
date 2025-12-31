@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.domain.Cat
+import com.rubensousa.swordcat.domain.CatFavoriteLocalSource
 import com.rubensousa.swordcat.domain.CatRepository
 import com.rubensousa.swordcat.domain.CatRequest
 import com.rubensousa.swordcat.ui.EventSink
@@ -31,6 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val repository: CatRepository,
+    private val favoriteSource: CatFavoriteLocalSource,
     private val listConfig: ListConfig,
     private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
@@ -110,15 +112,15 @@ class ListViewModel @Inject constructor(
             CatListItem(
                 breedName = cat.breedName,
                 imageReference = cat.imageId?.let { ImageReference(it) },
-                favoriteState = repository.observeFavoriteState(cat.id)
+                favoriteState = favoriteSource.observeIsFavorite(cat.id)
                     .stateIn(
                         scope = viewModelScope,
                         started = SharingStarted.WhileSubscribed(),
-                        initialValue = repository.isFavorite(cat.id)
+                        initialValue = favoriteSource.isFavorite(cat.id)
                     ),
                 onFavoriteClick = {
                     viewModelScope.launch {
-                        repository.toggleFavorite(cat.id)
+                        favoriteSource.toggleFavorite(cat.id)
                     }
                 },
                 onClick = {

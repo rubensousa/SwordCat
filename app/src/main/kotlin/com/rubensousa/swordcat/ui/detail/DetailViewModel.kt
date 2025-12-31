@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.domain.Cat
+import com.rubensousa.swordcat.domain.CatFavoriteLocalSource
 import com.rubensousa.swordcat.domain.CatRepository
 import com.rubensousa.swordcat.ui.StringResource
 import com.rubensousa.swordcat.ui.image.ImageReference
@@ -11,7 +12,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 class DetailViewModel @AssistedInject constructor(
     @Assisted private val catId: String,
     private val repository: CatRepository,
+    private val favoriteSource: CatFavoriteLocalSource,
     private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -40,7 +41,9 @@ class DetailViewModel @AssistedInject constructor(
         viewModelScope.launch(dispatcher) {
             repository.getCat(catId)
                 .onSuccess { cat ->
-                    uiState.update { createContentState(cat) }
+                    uiState.update {
+                        createContentState(cat)
+                    }
                 }
                 .onFailure {
                     uiState.update {
@@ -51,27 +54,7 @@ class DetailViewModel @AssistedInject constructor(
     }
 
     private suspend fun createContentState(cat: Cat): DetailScreenState.Content {
-        val infoItems = createInfoItems(cat)
-        return DetailScreenState.Content(
-            breedName = cat.breedName,
-            infoItems = infoItems,
-            imageReference = cat.imageId?.let { ImageReference(it) },
-            isFavorite = repository.observeFavoriteState(cat.id)
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(),
-                    initialValue = repository.isFavorite(cat.id)
-                ),
-            onFavoriteClick = {
-                viewModelScope.launch {
-                    repository.toggleFavorite(cat.id)
-                }
-            }
-        )
-    }
-
-    private fun createInfoItems(cat: Cat): ImmutableList<DetailInfoItem> {
-        return persistentListOf(
+        val infoItems = persistentListOf(
             DetailInfoItem(
                 label = StringResource.fromId(R.string.label_breed),
                 value = cat.breedName
@@ -88,6 +71,22 @@ class DetailViewModel @AssistedInject constructor(
                 label = StringResource.fromId(R.string.label_temperament),
                 value = cat.temperament
             ),
+        )
+        return DetailScreenState.Content(
+            breedName = cat.breedName,
+            infoItems = infoItems,
+            imageReference = cat.imageId?.let { ImageReference(it) },
+            isFavorite = favoriteSource.observeIsFavorite(cat.id)
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(),
+                    initialValue = favoriteSource.isFavorite(cat.id)
+                ),
+            onFavoriteClick = {
+                viewModelScope.launch {
+                    favoriteSource.toggleFavorite(cat.id)
+                }
+            }
         )
     }
 

@@ -14,7 +14,7 @@ import com.rubensousa.swordcat.database.internal.ImageEntity
         CatFavoriteEntity::class,
         ImageEntity::class,
     ],
-    version = 1
+    version = 1,
 )
 abstract class CatDatabase : RoomDatabase() {
 

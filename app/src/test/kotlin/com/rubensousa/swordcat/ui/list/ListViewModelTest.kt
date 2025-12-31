@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.carioca.junit4.rules.MainDispatcherRule
 import com.rubensousa.swordcat.fixtures.CatFixtures
+import com.rubensousa.swordcat.fixtures.FakeCatFavoriteLocalSource
 import com.rubensousa.swordcat.fixtures.FakeCatRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,6 +21,7 @@ class ListViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val repository = FakeCatRepository()
+    private val favoriteSource = FakeCatFavoriteLocalSource()
     private val unconfinedDispatcher = UnconfinedTestDispatcher()
     private val standardDispatcher = StandardTestDispatcher()
     private val config = ListConfig(searchDebounceMs = 300L)
@@ -84,7 +86,7 @@ class ListViewModelTest {
         item.onFavoriteClick()
 
         // then
-        assertThat(repository.isFavorite(catId)).isTrue()
+        assertThat(favoriteSource.isFavorite(catId)).isTrue()
     }
 
     @Test
@@ -93,7 +95,7 @@ class ListViewModelTest {
         val catId = "1"
         val cats = listOf(CatFixtures.create(id = catId))
         repository.setLoadCatsSuccessResult(cats)
-        repository.toggleFavorite(catId)
+        favoriteSource.toggleFavorite(catId)
 
         // when
         viewModel = createViewModel()
@@ -155,6 +157,7 @@ class ListViewModelTest {
     ): ListViewModel {
         return ListViewModel(
             repository = repository,
+            favoriteSource = favoriteSource,
             dispatcher = dispatcher,
             listConfig = config
         )

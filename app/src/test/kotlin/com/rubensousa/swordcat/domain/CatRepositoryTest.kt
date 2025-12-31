@@ -1,6 +1,5 @@
 package com.rubensousa.swordcat.domain
 
-import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.swordcat.domain.internal.CatRepositoryImpl
 import com.rubensousa.swordcat.fixtures.CatFixtures
@@ -68,35 +67,6 @@ class CatRepositoryTest {
 
         // then
         assertThat(result.isFailure).isTrue()
-    }
-
-    @Test
-    fun `toggleFavorite updates favorite state`() = runTest {
-        // given
-        val catId = "1"
-
-        // when
-        repository.toggleFavorite(catId)
-
-        // then
-        assertThat(repository.isFavorite(catId)).isTrue()
-    }
-
-    @Test
-    fun `observeFavoriteState emits updates`() = runTest {
-        // given
-        val catId = "1"
-
-
-        repository.observeFavoriteState(catId).test {
-            assertThat(awaitItem()).isFalse()
-
-            // when
-            repository.toggleFavorite(catId)
-
-            // then
-            assertThat(awaitItem()).isTrue()
-        }
     }
 
 }

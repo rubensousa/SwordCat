@@ -10,18 +10,25 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.domain.Cat
-import com.rubensousa.swordcat.fixtures.FakeCatRepository
+import com.rubensousa.swordcat.domain.CatLocalSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class DetailScreenController @AssistedInject constructor(
     @Assisted private val composeTestRule: ComposeTestRule,
-    private val repository: FakeCatRepository,
+    private val catLocalSource: CatLocalSource,
 ) {
 
+    private val coroutineScope = CoroutineScope(SupervisorJob())
+
     fun simulateCat(cat: Cat) {
-        repository.setGetCatSuccessResult(cat)
+        coroutineScope.launch {
+            catLocalSource.saveCats(listOf(cat))
+        }
     }
 
     fun waitUntilLoadingIsGone() {

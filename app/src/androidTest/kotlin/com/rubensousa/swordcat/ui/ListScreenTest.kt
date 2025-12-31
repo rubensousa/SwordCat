@@ -103,6 +103,7 @@ class ListScreenTest {
 
         // when
         screenController.performFavoriteClick(cat.breedName)
+        screenController.waitUntilCatIsFavorite(cat.breedName)
 
         // then
         screenController.assertCatIsFavorite(cat.breedName)
@@ -116,6 +117,7 @@ class ListScreenTest {
         launchScreen()
         screenController.waitUntilLoadingIsGone()
         screenController.performFavoriteClick(cat.breedName)
+        screenController.waitUntilCatIsFavorite(cat.breedName)
 
         // when
         screenController.performFavoriteClick(cat.breedName)

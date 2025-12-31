@@ -1,21 +1,19 @@
 package com.rubensousa.swordcat.database
 
 import com.rubensousa.swordcat.database.internal.CatEntity
-import com.rubensousa.swordcat.database.internal.CatFavoriteEntity
+import com.rubensousa.swordcat.database.internal.CatEntityMapper
 import com.rubensousa.swordcat.domain.Cat
 import com.rubensousa.swordcat.domain.CatLocalSource
 import com.rubensousa.swordcat.domain.CatRequest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CatDatabaseSource @Inject constructor(
+class CatDatabaseSource @Inject internal constructor(
     database: CatDatabase,
+    private val entityMapper: CatEntityMapper,
     private val dispatcher: CoroutineDispatcher
 ) : CatLocalSource {
 
@@ -28,7 +26,7 @@ class CatDatabaseSource @Inject constructor(
                     limit = request.limit,
                     offset = request.offset
                 ).map { entity ->
-                    mapCatFromEntity(entity)
+                    entityMapper.mapFromEntity(entity)
                 }
             }.getOrNull().orEmpty()
         }
@@ -37,35 +35,8 @@ class CatDatabaseSource @Inject constructor(
     override suspend fun getCat(id: String): Cat? {
         return withContext(dispatcher) {
             runCatching {
-                catDao.getCat(id)?.let { mapCatFromEntity(it) }
+                catDao.getCat(id)?.let { entity -> entityMapper.mapFromEntity(entity) }
             }.getOrNull()
-        }
-    }
-
-    override fun observeIsFavorite(catId: String): Flow<Boolean> {
-        return catDao.observeFavorite(catId)
-            .map { list -> list.isNotEmpty() }
-            .flowOn(dispatcher)
-    }
-
-    override fun observeFavoriteCats(): Flow<List<Cat>> {
-        return catDao.observeFavoriteCats().map { list ->
-            list.map { catEntity ->
-                mapCatFromEntity(catEntity)
-            }
-        }.flowOn(dispatcher)
-    }
-
-    override suspend fun setFavoriteCat(catId: String, isFavorite: Boolean) {
-        withContext(dispatcher) {
-            runCatching {
-                if (isFavorite) {
-                    catDao.setFavorite(CatFavoriteEntity(catId = catId))
-                } else {
-                    catDao.deleteFavorite(catId)
-                }
-
-            }
         }
     }
 
@@ -75,18 +46,6 @@ class CatDatabaseSource @Inject constructor(
                 catDao.upsertCats(cats.map { cat -> mapCatToEntity(cat) })
             }
         }
-    }
-
-    private fun mapCatFromEntity(entity: CatEntity): Cat {
-        return Cat(
-            id = entity.id,
-            breedName = entity.breedName,
-            origin = entity.origin,
-            temperament = entity.temperament,
-            description = entity.description,
-            imageId = entity.imageId,
-            lifespan = entity.lifespanStart..entity.lifespanEnd
-        )
     }
 
     private fun mapCatToEntity(cat: Cat): CatEntity {

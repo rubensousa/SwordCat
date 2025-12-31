@@ -3,6 +3,7 @@ package com.rubensousa.swordcat.ui.detail
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.carioca.junit4.rules.MainDispatcherRule
 import com.rubensousa.swordcat.fixtures.CatFixtures
+import com.rubensousa.swordcat.fixtures.FakeCatFavoriteLocalSource
 import com.rubensousa.swordcat.fixtures.FakeCatRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -17,6 +18,7 @@ class DetailViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val repository = FakeCatRepository()
+    private val favoriteSource = FakeCatFavoriteLocalSource()
     private val dispatcher = UnconfinedTestDispatcher()
     private val catId = "1"
     private lateinit var viewModel: DetailViewModel
@@ -59,13 +61,14 @@ class DetailViewModelTest {
         content.onFavoriteClick()
 
         // then
-        assertThat(repository.isFavorite(catId)).isTrue()
+        assertThat(favoriteSource.isFavorite(catId)).isTrue()
     }
 
     private fun createViewModel(): DetailViewModel {
         return DetailViewModel(
             catId = catId,
             repository = repository,
+            favoriteSource = favoriteSource,
             dispatcher = dispatcher
         )
     }
