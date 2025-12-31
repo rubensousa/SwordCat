@@ -10,10 +10,15 @@ import kotlinx.coroutines.flow.map
 class FakeCatRepository : CatRepository {
 
     private var result = Result.failure<List<Cat>>(IllegalStateException("Not set"))
+    private var catResult = Result.failure<Cat>(IllegalStateException("Not set"))
     private val favoriteState = MutableStateFlow<Map<String, Boolean>>(emptyMap())
 
     override suspend fun loadCats(request: CatRequest): Result<List<Cat>> {
         return result
+    }
+
+    override suspend fun getCat(id: String): Result<Cat> {
+        return catResult
     }
 
     override suspend fun isFavorite(catId: String): Boolean {
@@ -36,6 +41,14 @@ class FakeCatRepository : CatRepository {
 
     fun setLoadCatsErrorResult(error: Throwable) {
         result = Result.failure(error)
+    }
+
+    fun setGetCatSuccessResult(cat: Cat) {
+        catResult = Result.success(cat)
+    }
+
+    fun setGetCatErrorResult(error: Throwable) {
+        catResult = Result.failure(error)
     }
 
 }

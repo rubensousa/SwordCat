@@ -16,6 +16,10 @@ class FakeCatLocalSource : CatLocalSource {
         return catCache.values.sortedBy { it.breedName }
     }
 
+    override suspend fun getCat(id: String): Cat? {
+        return catCache[id]
+    }
+
     override suspend fun saveCats(cats: List<Cat>) {
         cats.forEach { cat ->
             catCache[cat.id] = cat
