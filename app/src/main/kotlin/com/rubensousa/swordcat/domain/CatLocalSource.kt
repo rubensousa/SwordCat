@@ -8,4 +8,5 @@ interface CatLocalSource {
     suspend fun saveCats(cats: List<Cat>)
     suspend fun setFavoriteCat(catId: String, isFavorite: Boolean)
     fun observeIsFavorite(catId: String): Flow<Boolean>
+    fun observeFavoriteCats(): Flow<List<Cat>>
 }

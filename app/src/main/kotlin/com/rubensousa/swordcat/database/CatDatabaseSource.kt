@@ -48,15 +48,19 @@ class CatDatabaseSource @Inject constructor(
             .flowOn(dispatcher)
     }
 
+    override fun observeFavoriteCats(): Flow<List<Cat>> {
+        return catDao.observeFavoriteCats().map { list ->
+            list.map { catEntity ->
+                mapCatFromEntity(catEntity)
+            }
+        }.flowOn(dispatcher)
+    }
+
     override suspend fun setFavoriteCat(catId: String, isFavorite: Boolean) {
         withContext(dispatcher) {
             runCatching {
                 if (isFavorite) {
-                    catDao.setFavorite(
-                        CatFavoriteEntity(
-                            catId = catId
-                        )
-                    )
+                    catDao.setFavorite(CatFavoriteEntity(catId = catId))
                 } else {
                     catDao.deleteFavorite(catId)
                 }

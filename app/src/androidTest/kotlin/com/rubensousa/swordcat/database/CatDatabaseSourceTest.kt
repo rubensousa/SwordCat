@@ -8,6 +8,7 @@ import com.rubensousa.swordcat.fixtures.CatFixtures
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Test
 
 class CatDatabaseSourceTest {
@@ -21,6 +22,11 @@ class CatDatabaseSourceTest {
         database = database,
         dispatcher = UnconfinedTestDispatcher()
     )
+
+    @After
+    fun tearDown() {
+        database.close()
+    }
 
     @Test
     fun testCatIsSaved() = runTest {
@@ -89,5 +95,36 @@ class CatDatabaseSourceTest {
 
         // then
         assertThat(databaseSource.observeIsFavorite(catId).first()).isFalse()
+    }
+
+    @Test
+    fun testObserveFavoriteCatsOnlyReturnsFavorites() = runTest {
+        // given
+        val cat1 = CatFixtures.create(id = "1", breedName = "A")
+        val cat2 = CatFixtures.create(id = "2", breedName = "B")
+        databaseSource.saveCats(listOf(cat1, cat2))
+        databaseSource.setFavoriteCat(cat1.id, true)
+
+        // when
+        val favorites = databaseSource.observeFavoriteCats().first()
+
+        // then
+        assertThat(favorites).isEqualTo(listOf(cat1))
+    }
+
+    @Test
+    fun testObserveFavoriteCatsAreSortedByName() = runTest {
+        // given
+        val cat1 = CatFixtures.create(id = "1", breedName = "Z")
+        val cat2 = CatFixtures.create(id = "2", breedName = "A")
+        databaseSource.saveCats(listOf(cat1, cat2))
+        databaseSource.setFavoriteCat(cat1.id, true)
+        databaseSource.setFavoriteCat(cat2.id, true)
+
+        // when
+        val favorites = databaseSource.observeFavoriteCats().first()
+
+        // then
+        assertThat(favorites).isEqualTo(listOf(cat2, cat1))
     }
 }

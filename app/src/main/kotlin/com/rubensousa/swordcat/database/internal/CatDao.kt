@@ -20,6 +20,9 @@ internal interface CatDao {
     @Query("SELECT * FROM favorite_cat WHERE catId = :catId")
     fun observeFavorite(catId: String): Flow<List<CatFavoriteEntity>>
 
+    @Query("SELECT cat.* FROM cat INNER JOIN favorite_cat ON cat.id = favorite_cat.catId ORDER BY cat.breed_name ASC")
+    fun observeFavoriteCats(): Flow<List<CatEntity>>
+
     @Upsert
     suspend fun setFavorite(entity: CatFavoriteEntity)
 
