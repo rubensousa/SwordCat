@@ -1,12 +1,12 @@
 package com.rubensousa.swordcat.ui.image
 
 import coil3.ImageLoader
-import coil3.Uri
 import coil3.annotation.ExperimentalCoilApi
 import coil3.fetch.FetchResult
 import coil3.fetch.Fetcher
 import coil3.network.NetworkFetcher
 import coil3.request.Options
+import coil3.toUri
 import com.rubensousa.swordcat.domain.ImageRepository
 
 class ImageReferenceFetcher(
@@ -21,10 +21,7 @@ class ImageReferenceFetcher(
     override suspend fun fetch(): FetchResult? {
         val image = imageRepository.getImageUrl(data.id).getOrNull() ?: return null
         val networkFetcher = networkFetcherFactory.create(
-            data = Uri(
-                path = image.replace("https://", ""),
-                scheme = "https"
-            ),
+            data = image.toUri(),
             options = options,
             imageLoader = imageLoader,
         )
