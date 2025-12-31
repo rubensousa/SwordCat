@@ -3,7 +3,6 @@ package com.rubensousa.swordcat.ui.list
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +19,9 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +44,9 @@ fun CatCell(
     ) {
         Box(
             modifier = Modifier
+                .semantics {
+                    contentDescription = name
+                }
                 .clickable {
                     onClick()
                 }
@@ -52,7 +57,7 @@ fun CatCell(
                 modifier = Modifier.fillMaxSize(),
                 model = imageReference,
                 contentScale = ContentScale.Crop,
-                contentDescription = name
+                contentDescription = null
             )
             Box(
                 modifier = Modifier
@@ -62,8 +67,17 @@ fun CatCell(
                         drawContent()
                     }
             ) {
+                val favoriteDescription = if (isFavorite) {
+                    stringResource(R.string.favorite_on)
+                } else {
+                    stringResource(R.string.favorite_off)
+                }
                 IconButton(
-                    modifier = Modifier.align(Alignment.TopEnd),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .semantics {
+                            contentDescription = favoriteDescription
+                        },
                     onClick = {
                         onFavoriteClick()
                     }

@@ -4,7 +4,7 @@ import com.rubensousa.swordcat.domain.ImageRemoteService
 
 class FakeImageRemoteService : ImageRemoteService {
 
-    private var result = Result.failure<String>(IllegalStateException("Not set"))
+    private var result = Result.success("https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg")
 
     override suspend fun getImageUrl(imageId: String): Result<String> {
         return result

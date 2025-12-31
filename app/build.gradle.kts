@@ -22,6 +22,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "com.rubensousa.carioca.hilt.runner.HiltTestRunner"
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
     }
 
     buildTypes {
@@ -51,6 +52,7 @@ android {
         enable = true
     }
     testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
         unitTests.isReturnDefaultValues = true
     }
     ksp {
@@ -108,4 +110,6 @@ dependencies {
     androidTestImplementation(libs.androidx.room.testing)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    androidTestUtil(libs.androidx.test.orchestrator)
+    androidTestUtil(libs.androidx.test.services)
 }
