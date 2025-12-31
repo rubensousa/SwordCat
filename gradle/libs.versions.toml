@@ -2,19 +2,15 @@
 activityCompose = "1.12.1"
 agp = "8.13.1"
 androidx-hilt = "1.3.0"
-androidx-test-core = "1.6.1"
 androidx-test-ext-junit = "1.2.1"
 carioca = "1.0.0"
-carioca-report = "1.0.1"
 coilCompose = "3.3.0"
 coilNetworkOkhttp = "3.3.0"
-compose-ui = "1.9.0-beta01"
 composeBom = "2025.12.00"
 coreKtx = "1.17.0"
 dagger = "2.57.2"
 espresso-core = "3.7.0"
 junit = "4.13.2"
-junitVersion = "1.3.0"
 kotlin = "2.2.21"
 kotlinSerialization = "2.2.21"
 kotlinx-coroutines = "1.10.1"
@@ -23,7 +19,6 @@ kotlinxSerializationCore = "1.9.0"
 ksp = "2.3.0"
 lifecycleRuntimeKtx = "2.10.0"
 lifecycleViewmodelNav3 = "2.10.0"
-material3AdaptiveNav3 = "1.3.0-alpha05"
 material3AdaptiveNavigationSuite = "1.4.0"
 mockwebserver3 = "5.3.2"
 nav3Core = "1.0.0"
@@ -31,12 +26,10 @@ okhttp = "5.3.2"
 orchestrator = "1.5.1"
 retrofit = "3.0.0"
 room = "2.7.1"
-runner = "1.6.2"
 test-services = "1.5.0"
 timber = "5.0.1"
 truth = "1.4.5"
 turbine = "1.2.0"
-ui-automator = "2.3.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -57,8 +50,8 @@ androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecy
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-room = { module = "androidx.room:room-ktx", version.ref = "room" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
@@ -72,20 +65,14 @@ retrofit-converter-serialization = { module = "com.squareup.retrofit2:converter-
 # Testing
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
-androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidx-test-core" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext-junit" }
 androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.ref = "orchestrator" }
-androidx-test-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-test-services = { module = "androidx.test.services:test-services", version.ref = "test-services" }
-androidx-test-ui-automator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "ui-automator" }
-androidx-test-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-testing", version.ref = "lifecycleRuntimeKtx" }
 carioca-hilt-compose = { module = "com.rubensousa.carioca:hilt-compose", version.ref = "carioca" }
 carioca-hilt-manifest = { module = "com.rubensousa.carioca:hilt-manifest", version.ref = "carioca" }
 carioca-hilt-runner = { module = "com.rubensousa.carioca:hilt-runner", version.ref = "carioca" }
 carioca-rules = { module = "com.rubensousa.carioca:junit4-rules", version.ref = "carioca" }
-compose-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose-ui" }
-compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose-ui" }
 dagger-hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "dagger" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -97,10 +84,10 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
