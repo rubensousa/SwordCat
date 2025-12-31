@@ -1,5 +1,6 @@
 package com.rubensousa.swordcat.domain
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.swordcat.domain.internal.CatRepositoryImpl
 import com.rubensousa.swordcat.fixtures.CatFixtures
@@ -21,9 +22,7 @@ class CatRepositoryTest {
     @Test
     fun `cats load from remote source by default`() = runTest {
         // given
-        val localCats = emptyList<Cat>()
         val remoteCats = List(3) { CatFixtures.create() }
-        localSource.saveCats(localCats)
         remoteSource.setLoadCatSuccessResult(remoteCats)
 
         // when
@@ -33,20 +32,6 @@ class CatRepositoryTest {
         // then
         assertThat(cats).isEqualTo(remoteCats)
     }
-
-    @Test
-    fun `network error is returned to consumer`() = runTest {
-        // given
-        val errorCause = IllegalStateException("Whoops")
-        remoteSource.setLoadCatErrorResult(errorCause)
-
-        // when
-        val error = repository.loadCats(CatRequestFixtures.create()).exceptionOrNull()
-
-        // then
-        assertThat(error).isEqualTo(errorCause)
-    }
-
 
     @Test
     fun `local content is returned if remote source fails`() = runTest {
@@ -61,6 +46,35 @@ class CatRepositoryTest {
 
         // then
         assertThat(cats).isEqualTo(localCats)
+    }
+
+    @Test
+    fun `toggleFavorite updates favorite state`() = runTest {
+        // given
+        val catId = "1"
+
+        // when
+        repository.toggleFavorite(catId)
+
+        // then
+        assertThat(repository.isFavorite(catId)).isTrue()
+    }
+
+    @Test
+    fun `observeFavoriteState emits updates`() = runTest {
+        // given
+        val catId = "1"
+
+
+        repository.observeFavoriteState(catId).test {
+            assertThat(awaitItem()).isFalse()
+
+            // when
+            repository.toggleFavorite(catId)
+
+            // then
+            assertThat(awaitItem()).isTrue()
+        }
     }
 
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c0db622ddf0b0d09619d585553b2422e",
+    "identityHash": "cb7f6c8beb6dd7b6bdccf163a4a68c5f",
     "entities": [
       {
         "tableName": "cat",
@@ -64,6 +64,37 @@
         }
       },
       {
+        "tableName": "favorite_cat",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`catId` TEXT NOT NULL, PRIMARY KEY(`catId`), FOREIGN KEY(`catId`) REFERENCES `cat`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "catId",
+            "columnName": "catId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "catId"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "cat",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "catId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "image",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
@@ -90,7 +121,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c0db622ddf0b0d09619d585553b2422e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cb7f6c8beb6dd7b6bdccf163a4a68c5f')"
     ]
   }
 }

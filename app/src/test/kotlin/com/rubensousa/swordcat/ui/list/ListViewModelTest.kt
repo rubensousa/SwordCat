@@ -1,6 +1,6 @@
 package com.rubensousa.swordcat.ui.list
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import com.rubensousa.carioca.junit4.rules.MainDispatcherRule
 import com.rubensousa.swordcat.fixtures.CatFixtures
 import com.rubensousa.swordcat.fixtures.FakeCatRepository
@@ -31,8 +31,8 @@ class ListViewModelTest {
 
         // then
         val state = viewModel.getUiState().value as ListScreenState.Content
-        Truth.assertThat(state.items).hasSize(1)
-        Truth.assertThat(state.items[0].breedName).isEqualTo("Abyssinian")
+        assertThat(state.items).hasSize(1)
+        assertThat(state.items[0].breedName).isEqualTo("Abyssinian")
     }
 
     @Test
@@ -44,7 +44,7 @@ class ListViewModelTest {
         viewModel = createViewModel()
 
         // then
-        Truth.assertThat(viewModel.getUiState().value)
+        assertThat(viewModel.getUiState().value)
             .isInstanceOf(ListScreenState.Error::class.java)
     }
 
@@ -61,8 +61,42 @@ class ListViewModelTest {
         errorState.onRetryClick()
 
         // then
-        Truth.assertThat(viewModel.getUiState().value)
+        assertThat(viewModel.getUiState().value)
             .isInstanceOf(ListScreenState.Content::class.java)
+    }
+
+    @Test
+    fun `toggling favorite updates item state`() = runTest {
+        // given
+        val catId = "1"
+        val cats = listOf(CatFixtures.create(id = catId))
+        repository.setLoadCatsSuccessResult(cats)
+        viewModel = createViewModel()
+        val state = viewModel.getUiState().value as ListScreenState.Content
+        val item = state.items[0]
+
+        // when
+        item.onFavoriteClick()
+
+        // then
+        assertThat(repository.isFavorite(catId)).isTrue()
+    }
+
+    @Test
+    fun `item favorite state is initialized correctly to favorite state`() = runTest {
+        // given
+        val catId = "1"
+        val cats = listOf(CatFixtures.create(id = catId))
+        repository.setLoadCatsSuccessResult(cats)
+        repository.toggleFavorite(catId)
+
+        // when
+        viewModel = createViewModel()
+        val state = viewModel.getUiState().value as ListScreenState.Content
+        val item = state.items[0]
+
+        // then
+        assertThat(item.favoriteState.value).isTrue()
     }
 
     private fun createViewModel() = ListViewModel(

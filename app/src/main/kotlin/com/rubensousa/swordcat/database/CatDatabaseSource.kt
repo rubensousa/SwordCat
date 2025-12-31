@@ -1,10 +1,14 @@
 package com.rubensousa.swordcat.database
 
 import com.rubensousa.swordcat.database.internal.CatEntity
+import com.rubensousa.swordcat.database.internal.CatFavoriteEntity
 import com.rubensousa.swordcat.domain.Cat
 import com.rubensousa.swordcat.domain.CatLocalSource
 import com.rubensousa.swordcat.domain.CatRequest
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,6 +31,29 @@ class CatDatabaseSource @Inject constructor(
                     mapCatFromEntity(entity)
                 }
             }.getOrNull().orEmpty()
+        }
+    }
+
+    override fun observeIsFavorite(catId: String): Flow<Boolean> {
+        return catDao.observeFavorite(catId)
+            .map { list -> list.isNotEmpty() }
+            .flowOn(dispatcher)
+    }
+
+    override suspend fun setFavoriteCat(catId: String, isFavorite: Boolean) {
+        withContext(dispatcher) {
+            runCatching {
+                if (isFavorite) {
+                    catDao.setFavorite(
+                        CatFavoriteEntity(
+                            catId = catId
+                        )
+                    )
+                } else {
+                    catDao.deleteFavorite(catId)
+                }
+
+            }
         }
     }
 

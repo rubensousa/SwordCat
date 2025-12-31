@@ -5,6 +5,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.swordcat.domain.CatRequest
 import com.rubensousa.swordcat.fixtures.CatFixtures
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -15,7 +17,10 @@ class CatDatabaseSourceTest {
         CatDatabase::class.java
     ).build()
 
-    private val databaseSource = CatDatabaseSource(database)
+    private val databaseSource = CatDatabaseSource(
+        database = database,
+        dispatcher = UnconfinedTestDispatcher()
+    )
 
     @Test
     fun testCatIsSaved() = runTest {
@@ -57,5 +62,32 @@ class CatDatabaseSourceTest {
                 )
             )
         ).isEqualTo(cats.sortedBy { it.breedName })
+    }
+
+    @Test
+    fun testFavoriteIsAdded() = runTest {
+        // given
+        val catId = "some_id"
+        databaseSource.saveCats(listOf(CatFixtures.create(id = catId)))
+
+        // when
+        databaseSource.setFavoriteCat(catId, true)
+
+        // then
+        assertThat(databaseSource.observeIsFavorite(catId).first()).isTrue()
+    }
+
+    @Test
+    fun testFavoriteIsRemoved() = runTest {
+        // given
+        val catId = "some_id"
+        databaseSource.saveCats(listOf(CatFixtures.create(id = catId)))
+        databaseSource.setFavoriteCat(catId, true)
+
+        // when
+        databaseSource.setFavoriteCat(catId, false)
+
+        // then
+        assertThat(databaseSource.observeIsFavorite(catId).first()).isFalse()
     }
 }

@@ -14,9 +14,12 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,7 +54,8 @@ class ListViewModel @Inject constructor(
                         onSearchTextChanged = { text -> onSearchTextChanged(text) }
                     )
                 }
-            }.onFailure {
+            }.onFailure { error ->
+                Timber.e(error)
                 uiState.update {
                     ListScreenState.Error(
                         message = StringResource.fromId(R.string.error_generic),
@@ -68,14 +72,21 @@ class ListViewModel @Inject constructor(
 
     }
 
-    private fun mapCatItems(cats: List<Cat>): ImmutableList<CatListItem> {
+    private suspend fun mapCatItems(cats: List<Cat>): ImmutableList<CatListItem> {
         return cats.map { cat ->
             CatListItem(
                 breedName = cat.breedName,
                 imageReference = cat.imageId?.let { ImageReference(it) },
-                favoriteState = MutableStateFlow(false),
+                favoriteState = repository.observeFavoriteState(cat.id)
+                    .stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(),
+                        initialValue = repository.isFavorite(cat.id)
+                    ),
                 onFavoriteClick = {
-
+                    viewModelScope.launch {
+                        repository.toggleFavorite(cat.id)
+                    }
                 },
                 onClick = {
                     eventSink.push(ListScreenEvent.OpenDetail(cat.id))

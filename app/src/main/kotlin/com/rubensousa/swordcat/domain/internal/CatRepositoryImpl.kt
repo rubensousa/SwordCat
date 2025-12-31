@@ -5,6 +5,8 @@ import com.rubensousa.swordcat.domain.CatLocalSource
 import com.rubensousa.swordcat.domain.CatRemoteSource
 import com.rubensousa.swordcat.domain.CatRepository
 import com.rubensousa.swordcat.domain.CatRequest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,6 +37,18 @@ internal class CatRepositoryImpl @Inject constructor(
                     }
                 }
             )
+    }
+
+    override fun observeFavoriteState(catId: String): Flow<Boolean> {
+        return localSource.observeIsFavorite(catId)
+    }
+
+    override suspend fun toggleFavorite(catId: String) {
+        localSource.setFavoriteCat(catId, !isFavorite(catId))
+    }
+
+    override suspend fun isFavorite(catId: String): Boolean {
+        return localSource.observeIsFavorite(catId).firstOrNull() ?: false
     }
 
 }
