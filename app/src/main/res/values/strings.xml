@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SwordCat</string>
+    <string name="navigation_home">Home</string>
+    <string name="navigation_favorites">Favorites</string>
+    <string name="error_generic">Something went wrong while fetching our cats</string>
+    <string name="action_retry">Retry</string>
 </resources>

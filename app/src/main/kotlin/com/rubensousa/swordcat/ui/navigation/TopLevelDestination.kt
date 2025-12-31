@@ -7,17 +7,17 @@ import com.rubensousa.swordcat.ui.list.ListNavKey
 
 enum class TopLevelDestination(
     val navKey: NavKey,
-    val label: String,
+    val labelResource: Int,
     val iconResource: Int,
 ) {
     HOME(
         navKey = ListNavKey,
-        label = "Home",
+        labelResource = R.string.navigation_home,
         iconResource = R.drawable.ic_navigation_home,
     ),
     FAVORITES(
         navKey = FavoriteNavKey,
-        label = "Favorites",
+        labelResource = R.string.navigation_favorites,
         iconResource = R.drawable.ic_navigation_favorite
     ),
 }

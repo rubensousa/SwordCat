@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
@@ -45,11 +46,13 @@ fun MainScreen() {
                         icon = {
                             Icon(
                                 painter = painterResource(topLevelDestination.iconResource),
-                                contentDescription = topLevelDestination.label
+                                contentDescription = stringResource(topLevelDestination.labelResource)
                             )
                         },
                         label = {
-                            Text(topLevelDestination.label)
+                            Text(
+                                text = stringResource(topLevelDestination.labelResource)
+                            )
                         },
                         selected = topLevelDestination.navKey == navigationState.topLevelRoute,
                         onClick = {
