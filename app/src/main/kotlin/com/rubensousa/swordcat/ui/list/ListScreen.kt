@@ -22,7 +22,7 @@ import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,7 +76,7 @@ fun ListScreen(
         ) {
             when (state) {
                 is ListScreenState.Content -> {
-                    var searchText by remember { mutableStateOf("") }
+                    var searchText by rememberSaveable { mutableStateOf("") }
                     val placeholderText = stringResource(R.string.text_field_search)
                     SearchBar(
                         modifier = Modifier
