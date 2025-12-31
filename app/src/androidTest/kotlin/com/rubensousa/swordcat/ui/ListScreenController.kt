@@ -10,10 +10,9 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import androidx.test.platform.app.InstrumentationRegistry
 import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.domain.Cat
-import com.rubensousa.swordcat.fixtures.FakeCatRemoteSource
+import com.rubensousa.swordcat.fixtures.FakeCatRepository
 import com.rubensousa.swordcat.ui.list.ListConfig
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -21,16 +20,16 @@ import dagger.assisted.AssistedInject
 
 class ListScreenController @AssistedInject constructor(
     @Assisted private val composeTestRule: ComposeTestRule,
-    private val remoteCatRemoteSource: FakeCatRemoteSource,
+    private val catRepository: FakeCatRepository,
     private val config: ListConfig
 ) {
 
     fun simulateCats(cats: List<Cat>) {
-        remoteCatRemoteSource.setLoadCatSuccessResult(cats)
+        catRepository.setLoadCatsSuccessResult(cats)
     }
 
     fun simulateCatFetchError() {
-        remoteCatRemoteSource.setLoadCatErrorResult(IllegalStateException("Whoops"))
+        catRepository.setLoadCatsErrorResult(IllegalStateException("Whoops"))
     }
 
     fun waitUntilLoadingIsGone() {
@@ -94,10 +93,6 @@ class ListScreenController @AssistedInject constructor(
             .performTextInput(text)
         // Wait for search debounce
         Thread.sleep(config.searchDebounceMs)
-    }
-
-    private fun getString(id: Int): String {
-        return InstrumentationRegistry.getInstrumentation().targetContext.getString(id)
     }
 
     @AssistedFactory

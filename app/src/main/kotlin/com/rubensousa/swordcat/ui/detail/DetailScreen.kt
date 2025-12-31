@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -162,9 +164,15 @@ private fun DetailContent(state: DetailScreenState.Content) {
 
 @Composable
 private fun DetailInfoItemRow(item: DetailInfoItem) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    val label = item.label.text()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics {
+                contentDescription = label
+            }) {
         Text(
-            text = item.label.text(),
+            text = label,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
