@@ -3,6 +3,7 @@ package com.rubensousa.swordcat.ui.list
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,47 @@ fun CatCell(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    CatCellContainer(
+        name = name,
+        imageReference = imageReference,
+        onClick = onClick,
+        modifier = modifier,
+        actionSlot = {
+            val favoriteDescription = if (isFavorite) {
+                stringResource(R.string.favorite_on)
+            } else {
+                stringResource(R.string.favorite_off)
+            }
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .semantics {
+                        contentDescription = favoriteDescription
+                    },
+                onClick = onFavoriteClick
+            ) {
+                Icon(
+                    painter = if (isFavorite) {
+                        painterResource(R.drawable.ic_state_favorite_on)
+                    } else {
+                        painterResource(R.drawable.ic_state_favorite_off)
+                    },
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    contentDescription = null
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun CatCellContainer(
+    name: String,
+    imageReference: ImageReference?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    actionSlot: @Composable BoxScope.() -> Unit = {}
+) {
     Card(
         modifier = modifier
     ) {
@@ -67,31 +109,7 @@ fun CatCell(
                         drawContent()
                     }
             ) {
-                val favoriteDescription = if (isFavorite) {
-                    stringResource(R.string.favorite_on)
-                } else {
-                    stringResource(R.string.favorite_off)
-                }
-                IconButton(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .semantics {
-                            contentDescription = favoriteDescription
-                        },
-                    onClick = {
-                        onFavoriteClick()
-                    }
-                ) {
-                    Icon(
-                        painter = if (isFavorite) {
-                            painterResource(R.drawable.ic_state_favorite_on)
-                        } else {
-                            painterResource(R.drawable.ic_state_favorite_off)
-                        },
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = null
-                    )
-                }
+                actionSlot()
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -105,7 +123,6 @@ fun CatCell(
                 )
             }
         }
-
     }
 }
 

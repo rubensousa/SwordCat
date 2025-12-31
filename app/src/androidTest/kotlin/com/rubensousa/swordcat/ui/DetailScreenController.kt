@@ -14,19 +14,15 @@ import com.rubensousa.swordcat.domain.CatLocalSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class DetailScreenController @AssistedInject constructor(
     @Assisted private val composeTestRule: ComposeTestRule,
     private val catLocalSource: CatLocalSource,
 ) {
 
-    private val coroutineScope = CoroutineScope(SupervisorJob())
-
     fun simulateCat(cat: Cat) {
-        coroutineScope.launch {
+        runBlocking {
             catLocalSource.saveCats(listOf(cat))
         }
     }
