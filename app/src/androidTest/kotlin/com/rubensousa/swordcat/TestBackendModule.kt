@@ -3,8 +3,8 @@ package com.rubensousa.swordcat
 import com.rubensousa.swordcat.backend.BackendModule
 import com.rubensousa.swordcat.domain.CatRemoteSource
 import com.rubensousa.swordcat.domain.ImageRemoteService
-import com.rubensousa.swordcat.fixtures.FakeCatRemoteSource
-import com.rubensousa.swordcat.fixtures.FakeImageRemoteService
+import com.rubensousa.swordcat.domain.fixtures.FakeCatRemoteSource
+import com.rubensousa.swordcat.domain.fixtures.FakeImageRemoteService
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

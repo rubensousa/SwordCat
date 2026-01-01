@@ -4,7 +4,7 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.swordcat.database.internal.CatEntityMapper
-import com.rubensousa.swordcat.fixtures.CatFixtures
+import com.rubensousa.swordcat.domain.fixtures.CatFixtures
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

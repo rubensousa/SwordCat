@@ -3,8 +3,8 @@ package com.rubensousa.swordcat.ui.favorite
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.carioca.junit4.rules.MainDispatcherRule
-import com.rubensousa.swordcat.fixtures.CatFixtures
-import com.rubensousa.swordcat.fixtures.FakeCatFavoriteLocalSource
+import com.rubensousa.swordcat.domain.fixtures.CatFixtures
+import com.rubensousa.swordcat.domain.fixtures.FakeCatFavoriteLocalSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule

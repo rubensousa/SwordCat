@@ -62,6 +62,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -92,12 +93,15 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.bundles.test.unit)
+    testImplementation(libs.carioca.rules)
     testImplementation(libs.okhttp)
     testImplementation(libs.mockwebserver3)
+    testImplementation(testFixtures(project(":domain")))
 
     testFixturesImplementation(platform(libs.androidx.compose.bom))
     testFixturesImplementation(libs.androidx.compose.ui)
 
+    androidTestImplementation(testFixtures(project(":domain")))
     androidTestImplementation(libs.bundles.test.unit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)

@@ -13,7 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.rubensousa.swordcat.R
 import com.rubensousa.swordcat.domain.Cat
-import com.rubensousa.swordcat.fixtures.FakeCatRemoteSource
+import com.rubensousa.swordcat.domain.fixtures.FakeCatRemoteSource
 import com.rubensousa.swordcat.ui.list.ListConfig
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
