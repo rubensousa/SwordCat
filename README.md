@@ -8,7 +8,7 @@ The project follows **Clean Architecture** principles and is structured into a m
 
 ### Module Structure
 
-- **`:domain` (Pure Kotlin)**: Contains the business data models (`Cat`), repository interfaces and . It has zero dependencies on the Android framework, making it extremely easy to test.
+- **`:domain` (Pure Kotlin)**: Contains the business data models (`Cat`), repository interfaces and other business logic. It has zero dependencies on the Android framework, making it extremely easy to test.
 - **`:database` (Android Library)**: Persistence layer using **Room**. Handles local caching and user-specific states like favorites.
 - **`:backend` (Android Library)**: Networking layer using **Retrofit** and **OkHttp**. Handles communication with the Cat API
 - **`:app` (Android App)**: The UI layer. Built entirely with **Jetpack Compose**. It orchestrates the other modules and manages navigation.
