@@ -49,6 +49,18 @@ class CatDatabaseSourceTest {
     }
 
     @Test
+    fun testCatIsRetrieved() = runTest {
+        // given
+        val cat = CatFixtures.create(id = "some_id")
+
+        // when
+        databaseSource.saveCats(listOf(cat))
+
+        // then
+        assertThat(databaseSource.getCat(cat.id)).isEqualTo(cat)
+    }
+
+    @Test
     fun testCatsAreSortedByTheirNames() = runTest {
         // given
         val cats = listOf(
