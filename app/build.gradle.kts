@@ -55,10 +55,6 @@ android {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
         unitTests.isReturnDefaultValues = true
     }
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.generateKotlin", "true")
-    }
 }
 
 dependencies {
@@ -90,8 +86,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.serialization)
-    implementation(libs.androidx.room)
-    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.bundles.test.unit)
     testImplementation(libs.carioca.rules)
@@ -102,19 +96,19 @@ dependencies {
     testFixturesImplementation(platform(libs.androidx.compose.bom))
     testFixturesImplementation(libs.androidx.compose.ui)
 
+    debugImplementation(libs.carioca.hilt.manifest)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     androidTestImplementation(testFixtures(project(":domain")))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.test.unit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.carioca.hilt.manifest)
     androidTestImplementation(libs.dagger.hilt.testing)
     androidTestImplementation(libs.carioca.hilt.compose)
     androidTestImplementation(libs.carioca.hilt.runner)
     androidTestImplementation(libs.androidx.room.testing)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
     androidTestUtil(libs.androidx.test.orchestrator)
     androidTestUtil(libs.androidx.test.services)
 }
