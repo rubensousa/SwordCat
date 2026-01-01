@@ -1,11 +1,13 @@
 package com.rubensousa.swordcat.domain
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.rubensousa.swordcat.domain.internal.CatRepositoryImpl
 import com.rubensousa.swordcat.fixtures.CatFixtures
 import com.rubensousa.swordcat.fixtures.CatRequestFixtures
 import com.rubensousa.swordcat.fixtures.FakeCatLocalSource
 import com.rubensousa.swordcat.fixtures.FakeCatRemoteSource
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -13,38 +15,86 @@ class CatRepositoryTest {
 
     private val localSource = FakeCatLocalSource()
     private val remoteSource = FakeCatRemoteSource()
+    private val defaultRequest = CatRequestFixtures.create()
     private val repository = CatRepositoryImpl(
         localSource = localSource,
         remoteSource = remoteSource
     )
 
     @Test
-    fun `cats load from remote source by default`() = runTest {
+    fun `cats load from local source by default`() = runTest {
         // given
-        val remoteCats = List(3) { CatFixtures.create() }
+        val localCats = List(3) { CatFixtures.create(id = it.toString()) }
+        localSource.saveCats(localCats)
+
+        // when
+        val cats = repository.loadCats(CatRequest(limit = localCats.size, offset = 0))
+            .first().getOrThrow()
+
+        // then
+        assertThat(cats).isEqualTo(localCats)
+    }
+
+    @Test
+    fun `remote content is returned if local source does not have content`() = runTest {
+        // given
+        val remoteCats = List(3) { CatFixtures.create(id = it.toString()) }
         remoteSource.setLoadCatSuccessResult(remoteCats)
 
         // when
-        val cats = repository.loadCats(CatRequest(limit = remoteCats.size, offset = 0))
-            .getOrThrow()
+        val cats = repository.loadCats(defaultRequest).first().getOrThrow()
 
         // then
         assertThat(cats).isEqualTo(remoteCats)
     }
 
     @Test
-    fun `local content is returned if remote source fails`() = runTest {
+    fun `remote content is saved to local source`() = runTest {
         // given
-        val errorCause = IllegalStateException("Whoops")
-        val localCats = List(3) { CatFixtures.create(id = it.toString()) }
-        localSource.saveCats(localCats)
-        remoteSource.setLoadCatErrorResult(errorCause)
+        val remoteCats = List(3) { CatFixtures.create(id = it.toString()) }
+        remoteSource.setLoadCatSuccessResult(remoteCats)
+        repository.loadCats(defaultRequest).first().getOrThrow()
 
         // when
-        val cats = repository.loadCats(CatRequestFixtures.create()).getOrThrow()
+        val cats = localSource.loadCats(CatRequestFixtures.create())
 
         // then
-        assertThat(cats).isEqualTo(localCats)
+        assertThat(cats).isEqualTo(remoteCats)
+    }
+
+    @Test
+    fun `remote content update is not returned if it matches the local content`() = runTest {
+        // given
+        val remoteCats = List(3) { CatFixtures.create(id = it.toString()) }
+        val localCats = remoteCats.toList()
+        remoteSource.setLoadCatSuccessResult(remoteCats)
+        localSource.saveCats(localCats)
+
+        repository.loadCats(defaultRequest).test {
+            // when
+            skipItems(1)
+
+            // then
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `remote content update is returned if it is different than local`() = runTest {
+        // given
+        val remoteCats = List(10) { CatFixtures.create(id = it.toString()) }
+        val localCats = remoteCats.subList(0, 3)
+        remoteSource.setLoadCatSuccessResult(remoteCats)
+        localSource.saveCats(localCats)
+
+        repository.loadCats(defaultRequest).test {
+            // when
+            skipItems(1)
+
+            // then
+            assertThat(awaitItem().getOrThrow()).isEqualTo(remoteCats)
+            awaitComplete()
+        }
     }
 
     @Test

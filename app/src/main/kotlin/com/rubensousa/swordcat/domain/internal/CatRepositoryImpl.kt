@@ -5,6 +5,9 @@ import com.rubensousa.swordcat.domain.CatLocalSource
 import com.rubensousa.swordcat.domain.CatRemoteSource
 import com.rubensousa.swordcat.domain.CatRepository
 import com.rubensousa.swordcat.domain.CatRequest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,15 +17,18 @@ internal class CatRepositoryImpl @Inject constructor(
     private val remoteSource: CatRemoteSource,
 ) : CatRepository {
 
-    override suspend fun loadCats(request: CatRequest): Result<List<Cat>> {
-        return remoteSource.loadCats(request)
+    override fun loadCats(request: CatRequest): Flow<Result<List<Cat>>> = flow {
+        val localContent = localSource.loadCats(request)
+        if (localContent.isNotEmpty()) {
+            emit(Result.success(localContent))
+        }
+        val remoteResult = remoteSource.loadCats(request)
             .fold(
                 onSuccess = { remoteContent ->
                     localSource.saveCats(remoteContent)
                     Result.success(remoteContent)
                 },
                 onFailure = { error ->
-                    val localContent = localSource.loadCats(request)
                     if (localContent.isEmpty()) {
                         Result.failure(error)
                     } else {
@@ -30,14 +36,14 @@ internal class CatRepositoryImpl @Inject constructor(
                     }
                 }
             )
-    }
+        emit(remoteResult)
+    }.distinctUntilChanged()
 
     override suspend fun getCat(id: String): Result<Cat> {
         val cat = localSource.getCat(id)
         return if (cat != null) {
             Result.success(cat)
         } else {
-            // Simplification, ideally we would fetch remote again and update
             Result.failure(NoSuchElementException("Cat not found with id: $id"))
         }
     }

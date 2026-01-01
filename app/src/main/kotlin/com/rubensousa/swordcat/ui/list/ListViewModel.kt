@@ -59,19 +59,21 @@ class ListViewModel @Inject constructor(
                     limit = 100,
                     offset = 0
                 )
-            ).onSuccess { cats ->
-                allCatItems = mapCatItems(cats)
-                setContentState(allCatItems)
-                observeSearchQuery()
-            }.onFailure { error ->
-                Timber.e(error)
-                uiState.update {
-                    ListScreenState.Error(
-                        message = StringResource.fromId(R.string.error_generic),
-                        onRetryClick = {
-                            loadCats()
-                        }
-                    )
+            ).collectLatest { result ->
+                result.onSuccess { cats ->
+                    allCatItems = mapCatItems(cats)
+                    setContentState(allCatItems)
+                    observeSearchQuery()
+                }.onFailure { error ->
+                    Timber.e(error)
+                    uiState.update {
+                        ListScreenState.Error(
+                            message = StringResource.fromId(R.string.error_generic),
+                            onRetryClick = {
+                                loadCats()
+                            }
+                        )
+                    }
                 }
             }
         }
