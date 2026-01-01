@@ -6,17 +6,18 @@ import com.rubensousa.swordcat.domain.CatLocalSource
 import com.rubensousa.swordcat.domain.CatRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CatDatabaseSource @Inject internal constructor(
+class CatDatabaseSource internal constructor(
     database: CatDatabase,
+    private val dispatcher: CoroutineDispatcher,
     private val entityMapper: CatEntityMapper,
-    private val dispatcher: CoroutineDispatcher
 ) : CatLocalSource {
 
     private val catDao = database.catDao()
+
+    constructor(database: CatDatabase, dispatcher: CoroutineDispatcher) : this(
+        database, dispatcher, CatEntityMapper()
+    )
 
     override suspend fun loadCats(request: CatRequest): List<Cat> {
         return withContext(dispatcher) {

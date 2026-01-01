@@ -3,7 +3,6 @@ package com.rubensousa.swordcat.database
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
-import com.rubensousa.swordcat.database.internal.CatEntityMapper
 import com.rubensousa.swordcat.domain.fixtures.CatFixtures
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -11,7 +10,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Test
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CatFavoriteDatabaseSourceTest {
@@ -23,13 +21,11 @@ class CatFavoriteDatabaseSourceTest {
 
     private val catDatabaseSource = CatDatabaseSource(
         database = database,
-        entityMapper = CatEntityMapper(),
         dispatcher = UnconfinedTestDispatcher()
     )
 
     private val favoriteDatabaseSource = CatFavoriteDatabaseSource(
         database = database,
-        entityMapper = CatEntityMapper(),
         dispatcher = UnconfinedTestDispatcher()
     )
 

@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SwordCat"
 include(":app")
+include(":database")
 include(":domain")

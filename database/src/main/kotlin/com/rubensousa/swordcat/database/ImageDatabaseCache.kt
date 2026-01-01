@@ -4,11 +4,8 @@ import com.rubensousa.swordcat.database.internal.ImageEntity
 import com.rubensousa.swordcat.domain.ImageCache
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ImageDatabaseCache @Inject constructor(
+class ImageDatabaseCache(
     database: CatDatabase,
     private val dispatcher: CoroutineDispatcher
 ) : ImageCache {

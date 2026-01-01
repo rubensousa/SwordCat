@@ -1,11 +1,10 @@
 package com.rubensousa.swordcat.database.internal
 
 import com.rubensousa.swordcat.domain.Cat
-import javax.inject.Inject
 
-internal class CatEntityMapper @Inject constructor() {
+internal class CatEntityMapper {
 
-    fun mapFromEntity(entity: CatEntity): Cat   {
+    fun mapFromEntity(entity: CatEntity): Cat {
         return Cat(
             id = entity.id,
             breedName = entity.breedName,

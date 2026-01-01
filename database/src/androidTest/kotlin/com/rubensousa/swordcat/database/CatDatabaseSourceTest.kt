@@ -3,14 +3,15 @@ package com.rubensousa.swordcat.database
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
-import com.rubensousa.swordcat.database.internal.CatEntityMapper
 import com.rubensousa.swordcat.domain.CatRequest
 import com.rubensousa.swordcat.domain.fixtures.CatFixtures
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CatDatabaseSourceTest {
 
     private val database = Room.inMemoryDatabaseBuilder(
@@ -20,7 +21,6 @@ class CatDatabaseSourceTest {
 
     private val databaseSource = CatDatabaseSource(
         database = database,
-        entityMapper = CatEntityMapper(),
         dispatcher = UnconfinedTestDispatcher()
     )
 

@@ -10,17 +10,18 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CatFavoriteDatabaseSource @Inject internal constructor(
+class CatFavoriteDatabaseSource internal constructor(
     database: CatDatabase,
-    private val entityMapper: CatEntityMapper,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
+    private val entityMapper: CatEntityMapper
 ) : CatFavoriteLocalSource {
 
     private val catDao = database.catDao()
+
+    constructor(database: CatDatabase, dispatcher: CoroutineDispatcher) : this(
+        database, dispatcher, CatEntityMapper()
+    )
 
     override fun observeIsFavorite(catId: String): Flow<Boolean> {
         return catDao.observeFavorite(catId)
