@@ -3,7 +3,7 @@ package com.rubensousa.swordcat.app
 import android.app.Application
 import coil3.annotation.ExperimentalCoilApi
 import com.rubensousa.swordcat.BuildConfig
-import com.rubensousa.swordcat.ui.image.CoilInitializer
+import com.rubensousa.swordcat.app.image.CoilInitializer
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject

@@ -1,8 +1,8 @@
 package com.rubensousa.swordcat.ui
 
 import com.rubensousa.carioca.hilt.compose.createHiltComposeRule
+import com.rubensousa.swordcat.app.list.ListScreen
 import com.rubensousa.swordcat.domain.fixtures.CatFixtures
-import com.rubensousa.swordcat.ui.list.ListScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
