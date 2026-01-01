@@ -6,12 +6,15 @@ import com.rubensousa.swordcat.domain.CatRemoteSource
 import com.rubensousa.swordcat.domain.CatRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import retrofit2.Retrofit
+import retrofit2.create
 
-class CatHttpSource @Inject internal constructor(
-    private val service: CatService,
+class CatHttpService(
+    retrofit: Retrofit,
     private val dispatcher: CoroutineDispatcher,
 ) : CatRemoteSource {
+
+    private val service = retrofit.create<CatService>()
 
     override suspend fun loadCats(request: CatRequest): Result<List<Cat>> {
         return withContext(dispatcher) {

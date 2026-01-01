@@ -1,4 +1,4 @@
-package com.rubensousa.swordcat.backend.internal
+package com.rubensousa.swordcat.backend
 
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -8,8 +8,8 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 private const val API_BASE_URL = "https://api.thecatapi.com/v1/"
 
-class RetrofitBuilder(
-    private val okHttpClient: OkHttpClient
+class CatRetrofitBuilder(
+    private val okHttpClient: OkHttpClient,
 ) {
 
     fun build(): Retrofit {

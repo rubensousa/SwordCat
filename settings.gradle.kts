@@ -23,3 +23,4 @@ rootProject.name = "SwordCat"
 include(":app")
 include(":database")
 include(":domain")
+include(":backend")

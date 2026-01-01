@@ -1,23 +1,25 @@
 package com.rubensousa.swordcat.backend
 
-import com.rubensousa.swordcat.backend.internal.CatService
+import com.rubensousa.swordcat.backend.internal.ImageService
 import com.rubensousa.swordcat.domain.ImageRemoteService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import retrofit2.Retrofit
+import retrofit2.create
 
-class HttpImageService @Inject internal constructor(
-    private val catService: CatService,
+class ImageHttpService(
+    retrofit: Retrofit,
     private val dispatcher: CoroutineDispatcher
 ) : ImageRemoteService {
+
+    private val imageService = retrofit.create<ImageService>()
 
     override suspend fun getImageUrl(imageId: String): Result<String> {
         return withContext(dispatcher) {
             runCatching {
-                catService.getImage(imageId).url
+                imageService.getImage(imageId).url
             }
         }
-
     }
 
 }

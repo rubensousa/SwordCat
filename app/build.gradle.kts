@@ -53,11 +53,11 @@ android {
     }
     testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
-        unitTests.isReturnDefaultValues = true
     }
 }
 
 dependencies {
+    implementation(project(":backend"))
     implementation(project(":database"))
     implementation(project(":domain"))
     implementation(libs.androidx.core.ktx)
@@ -83,9 +83,6 @@ dependencies {
     ksp(libs.androidx.hilt.compiler)
 
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.serialization)
 
     testImplementation(libs.bundles.test.unit)
     testImplementation(libs.carioca.rules)

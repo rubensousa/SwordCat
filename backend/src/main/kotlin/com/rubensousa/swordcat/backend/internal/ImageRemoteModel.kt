@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ImageRemoteModel(
+internal data class ImageRemoteModel(
     @SerialName("url") val url: String
 )

@@ -1,6 +1,6 @@
 package com.rubensousa.swordcat
 
-import com.rubensousa.swordcat.backend.BackendModule
+import com.rubensousa.swordcat.app.BackendModule
 import com.rubensousa.swordcat.domain.CatRemoteSource
 import com.rubensousa.swordcat.domain.ImageRemoteService
 import com.rubensousa.swordcat.domain.fixtures.FakeCatRemoteSource
