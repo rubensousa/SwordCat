@@ -1,6 +1,5 @@
 package com.rubensousa.swordcat.database
 
-import com.rubensousa.swordcat.database.internal.CatEntity
 import com.rubensousa.swordcat.database.internal.CatEntityMapper
 import com.rubensousa.swordcat.domain.Cat
 import com.rubensousa.swordcat.domain.CatLocalSource
@@ -43,22 +42,9 @@ class CatDatabaseSource @Inject internal constructor(
     override suspend fun saveCats(cats: List<Cat>) {
         withContext(dispatcher) {
             runCatching {
-                catDao.upsertCats(cats.map { cat -> mapCatToEntity(cat) })
+                catDao.upsertCats(cats.map { cat -> entityMapper.mapToEntity(cat) })
             }
         }
-    }
-
-    private fun mapCatToEntity(cat: Cat): CatEntity {
-        return CatEntity(
-            id = cat.id,
-            breedName = cat.breedName,
-            origin = cat.origin,
-            temperament = cat.temperament,
-            description = cat.description,
-            imageId = cat.imageId,
-            lifespanStart = cat.lifespan.first,
-            lifespanEnd = cat.lifespan.last,
-        )
     }
 
 }

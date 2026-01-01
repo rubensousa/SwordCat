@@ -17,4 +17,17 @@ internal class CatEntityMapper @Inject constructor() {
         )
     }
 
+    fun mapToEntity(cat: Cat): CatEntity {
+        return CatEntity(
+            id = cat.id,
+            breedName = cat.breedName,
+            origin = cat.origin,
+            temperament = cat.temperament,
+            description = cat.description,
+            imageId = cat.imageId,
+            lifespanStart = cat.lifespan.first,
+            lifespanEnd = cat.lifespan.last,
+        )
+    }
+
 }
